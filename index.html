@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>雪鳞 · 分配水量（格子版 · 5 关）</title>
+<style>
+  html,body{margin:0;height:100%;background:#1b1f26;overflow:hidden;
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;}
+  #wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  #stage{background:#D9D9D9;display:block;box-shadow:0 12px 48px rgba(0,0,0,.55);}
+  .hide{display:none!important;}
+  .gate{cursor:pointer;}
+  .gate rect{transition:fill .12s ease;}
+  .btn{cursor:pointer;}
+  .btn:hover rect{filter:brightness(1.07);}
+  #mask{position:absolute;inset:0;background:rgba(8,12,18,.32);display:flex;
+    align-items:center;justify-content:center;z-index:20;}
+  #dlg{background:#fff;border-radius:16px;padding:26px 32px;min-width:400px;
+    box-shadow:0 24px 70px rgba(0,0,0,.5);font-size:16px;color:#20242b;}
+  #dlg h2{margin:0 0 14px;font-size:22px;}
+  #dlg .row{display:flex;justify-content:space-between;gap:30px;padding:7px 0;
+    border-bottom:1px dashed #e3e6ea;}
+  #dlg .row:last-of-type{border-bottom:none;}
+  #dlg .row b.ok{color:#1f9d55;}
+  #dlg .row b.no{color:#d0433a;}
+  #dlg .hint{font-size:13px;color:#77808a;line-height:1.6;margin:10px 0 16px;}
+  #dlg .acts{display:flex;gap:10px;margin-top:8px;}
+  #dlg button{flex:1;padding:11px 0;border:0;border-radius:9px;font-size:15px;
+    cursor:pointer;background:#eef1f5;color:#2c333c;}
+  #dlg button.pri{background:#2f8fd8;color:#fff;}
+  #sel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    gap:22px;background:#141821;}
+  #sel .card{width:180px;padding:22px 16px;background:#232a35;border-radius:16px;
+    color:#e8edf3;text-align:center;cursor:pointer;transition:.15s;border:1px solid #313a47;}
+  #sel .card:hover{background:#2c3542;transform:translateY(-4px);}
+  #sel .card b{font-size:20px;display:block;margin-bottom:8px;}
+  #sel .card span{font-size:13px;color:#94a1b2;line-height:1.7;}
+</style>
+</head>
+<body>
+<div id="wrap"><svg id="stage" viewBox="0 0 1920 1080"></svg></div>
+<div id="mask" class="hide"><div id="dlg"></div></div>
+<div id="sel"></div>
+
+<script>
+const LEVELS = [{"title":"第一关","nodes":[{"id":0,"kind":"src","box":[15,1,17,2],"water":16,"label":"起点"},{"id":1,"kind":"pool","box":[11,6,13,7],"label":"蓄水池"},{"id":2,"kind":"pool","box":[18,9,20,10],"label":"蓄水池"},{"id":3,"kind":"goal","box":[7,12,9,13],"need":12,"label":"目标点1"},{"id":4,"kind":"goal","box":[25,14,26,15],"need":4,"label":"目标点2"}],"edges":[{"frm":0,"to":1,"gate":0,"pts":[[930,178],[930,270],[690,270],[690,362]]},{"frm":0,"to":2,"gate":1,"pts":[[1050,178],[1050,270],[1170,270],[1170,542]]},{"frm":1,"to":2,"gate":3,"pts":[[810,478],[810,570],[1082,570]]},{"frm":1,"to":3,"gate":2,"pts":[[690,478],[690,570],[510,570],[510,722]]},{"frm":2,"to":3,"gate":4,"pts":[[1110,658],[1110,750],[598,750]]},{"frm":2,"to":4,"gate":5,"pts":[[1230,658],[1230,750],[1530,750],[1530,842]]}],"gates":[{"id":0,"c":15,"r":3},{"id":1,"c":17,"r":3},{"id":2,"c":11,"r":8},{"id":3,"c":13,"r":8},{"id":4,"c":18,"r":11},{"id":5,"c":20,"r":11}],"panel":["关卡目标","为目标点1分配12点水量","为目标点2分配4点水量"]},{"title":"第二关","nodes":[{"id":0,"kind":"src","box":[8,3,10,4],"water":32,"label":"起点"},{"id":1,"kind":"trap","box":[7,9,9,10],"label":"陷阱"},{"id":2,"kind":"pool","box":[21,9,23,10],"label":"蓄水池"},{"id":3,"kind":"pool","box":[15,13,17,14],"label":"蓄水池"},{"id":4,"kind":"goal","box":[4,15,6,16],"need":12,"label":"目标点1"},{"id":5,"kind":"goal","box":[23,15,25,16],"need":12,"label":"目标点2"}],"edges":[{"frm":0,"to":1,"gate":0,"pts":[[510,298],[510,542]]},{"frm":0,"to":2,"gate":1,"pts":[[630,298],[630,450],[1350,450],[1350,542]]},{"frm":1,"to":3,"gate":3,"pts":[[570,658],[570,810],[902,810]]},{"frm":1,"to":4,"gate":2,"pts":[[450,658],[450,810],[330,810],[330,902]]},{"frm":2,"to":3,"gate":4,"pts":[[1290,658],[1290,810],[1078,810]]},{"frm":2,"to":5,"gate":5,"pts":[[1410,658],[1410,902]]},{"frm":3,"to":4,"gate":6,"pts":[[930,898],[930,990],[418,990]]},{"frm":3,"to":5,"gate":7,"pts":[[1050,898],[1050,990],[1382,990]]}],"gates":[{"id":0,"c":8,"r":5},{"id":1,"c":10,"r":5},{"id":2,"c":7,"r":11},{"id":3,"c":9,"r":11},{"id":4,"c":21,"r":11},{"id":5,"c":23,"r":11},{"id":6,"c":15,"r":15},{"id":7,"c":17,"r":15}],"panel":["关卡目标","为目标点1分配12点水量","为目标点2分配12点水量"]},{"title":"第三关","nodes":[{"id":0,"kind":"src","box":[19,1,21,2],"water":32,"label":"起点"},{"id":1,"kind":"pool","box":[14,4,16,5],"label":"蓄水池"},{"id":2,"kind":"trap","box":[8,8,10,9],"label":"陷阱"},{"id":3,"kind":"pool","box":[21,9,23,10],"label":"蓄水池"},{"id":4,"kind":"pool","box":[15,11,17,12],"label":"蓄水池"},{"id":5,"kind":"goal","box":[5,14,7,15],"need":7,"label":"目标点1"},{"id":6,"kind":"goal","box":[19,14,20,15],"need":5,"label":"目标点2"}],"edges":[{"frm":0,"to":1,"gate":0,"pts":[[1170,178],[1170,270],[1018,270]]},{"frm":0,"to":3,"gate":1,"pts":[[1290,178],[1290,542]]},{"frm":1,"to":2,"gate":2,"pts":[[870,358],[870,510],[658,510]]},{"frm":1,"to":4,"gate":3,"pts":[[990,358],[990,662]]},{"frm":2,"to":4,"gate":5,"pts":[[630,598],[630,690],[902,690]]},{"frm":2,"to":5,"gate":4,"pts":[[510,598],[510,750],[390,750],[390,842]]},{"frm":3,"to":6,"gate":6,"pts":[[1350,658],[1350,870],[1258,870]]},{"frm":4,"to":5,"gate":7,"pts":[[930,778],[930,870],[478,870]]},{"frm":4,"to":6,"gate":8,"pts":[[1050,778],[1050,870],[1142,870]]}],"gates":[{"id":0,"c":19,"r":3},{"id":1,"c":21,"r":3},{"id":2,"c":14,"r":6},{"id":3,"c":16,"r":6},{"id":4,"c":8,"r":10},{"id":5,"c":10,"r":10},{"id":6,"c":22,"r":11},{"id":7,"c":15,"r":13},{"id":8,"c":17,"r":13}],"panel":["关卡目标","为目标点1分配7点水量","为目标点2分配5点水量"]},{"title":"第四关","nodes":[{"id":0,"kind":"src","box":[8,1,10,2],"water":64,"label":"起点"},{"id":1,"kind":"pool","box":[24,6,26,7],"label":"蓄水池"},{"id":2,"kind":"pool","box":[7,7,9,8],"label":"蓄水池"},{"id":3,"kind":"trap","box":[14,10,16,11],"label":"陷阱"},{"id":4,"kind":"trap","box":[4,12,6,13],"label":"陷阱"},{"id":5,"kind":"goal","box":[21,13,24,14],"need":16,"label":"目标点3"},{"id":6,"kind":"goal","box":[1,15,2,16],"need":8,"label":"目标点1"},{"id":7,"kind":"goal","box":[11,15,14,16],"need":16,"label":"目标点2"}],"edges":[{"frm":0,"to":1,"gate":1,"pts":[[630,178],[630,270],[1530,270],[1530,362]]},{"frm":0,"to":2,"gate":0,"pts":[[510,178],[510,422]]},{"frm":1,"to":3,"gate":2,"pts":[[1470,478],[1470,630],[1018,630]]},{"frm":1,"to":7,"gate":3,"pts":[[1590,478],[1590,990],[898,990]]},{"frm":2,"to":3,"gate":5,"pts":[[570,538],[570,630],[842,630]]},{"frm":2,"to":4,"gate":4,"pts":[[450,538],[450,630],[330,630],[330,722]]},{"frm":3,"to":5,"gate":7,"pts":[[990,718],[990,810],[1262,810]]},{"frm":3,"to":7,"gate":6,"pts":[[870,718],[870,902]]},{"frm":4,"to":6,"gate":8,"pts":[[270,838],[270,930],[178,930]]},{"frm":4,"to":7,"gate":9,"pts":[[390,838],[390,930],[662,930]]}],"gates":[{"id":0,"c":8,"r":3},{"id":1,"c":10,"r":3},{"id":2,"c":24,"r":8},{"id":3,"c":26,"r":8},{"id":4,"c":7,"r":9},{"id":5,"c":9,"r":9},{"id":6,"c":14,"r":12},{"id":7,"c":16,"r":12},{"id":8,"c":4,"r":14},{"id":9,"c":6,"r":14}],"panel":["关卡目标","为目标点1分配8点水量","为目标点2分配16点水量","为目标点3分配16点水量"]},{"title":"第五关","nodes":[{"id":0,"kind":"src","box":[23,1,25,2],"water":64,"label":"起点1"},{"id":1,"kind":"pool","box":[11,6,13,7],"label":"蓄水池"},{"id":2,"kind":"trap","box":[7,9,9,10],"label":"陷阱"},{"id":3,"kind":"trap","box":[13,9,15,10],"label":"陷阱"},{"id":4,"kind":"src","box":[23,9,25,10],"water":32,"label":"起点2"},{"id":5,"kind":"pool","box":[18,12,20,13],"label":"蓄水池"},{"id":6,"kind":"pool","box":[8,13,10,14],"label":"蓄水池"},{"id":7,"kind":"goal","box":[24,14,27,15],"need":28,"label":"目标点3"},{"id":8,"kind":"goal","box":[3,15,6,16],"need":24,"label":"目标点1"},{"id":9,"kind":"goal","box":[15,15,16,16],"need":12,"label":"目标点2"}],"edges":[{"frm":0,"to":1,"gate":1,"pts":[[1530,178],[1530,390],[838,390]]},{"frm":0,"to":2,"gate":0,"pts":[[1410,178],[1410,270],[510,270],[510,542]]},{"frm":1,"to":2,"gate":2,"pts":[[690,478],[690,570],[598,570]]},{"frm":1,"to":3,"gate":3,"pts":[[810,478],[810,542]]},{"frm":2,"to":6,"gate":4,"pts":[[510,658],[510,782]]},{"frm":3,"to":5,"gate":6,"pts":[[930,658],[930,750],[1082,750]]},{"frm":3,"to":6,"gate":5,"pts":[[810,658],[810,810],[658,810]]},{"frm":4,"to":5,"gate":7,"pts":[[1410,658],[1410,750],[1258,750]]},{"frm":4,"to":7,"gate":8,"pts":[[1530,658],[1530,842]]},{"frm":5,"to":7,"gate":10,"pts":[[1230,838],[1230,930],[1442,930]]},{"frm":5,"to":9,"gate":9,"pts":[[1110,838],[1110,990],[1018,990]]},{"frm":6,"to":8,"gate":11,"pts":[[510,898],[510,990],[418,990]]},{"frm":6,"to":9,"gate":12,"pts":[[630,898],[630,990],[902,990]]}],"gates":[{"id":0,"c":23,"r":3},{"id":1,"c":25,"r":3},{"id":2,"c":11,"r":8},{"id":3,"c":13,"r":8},{"id":4,"c":8,"r":11},{"id":5,"c":13,"r":11},{"id":6,"c":15,"r":11},{"id":7,"c":23,"r":11},{"id":8,"c":25,"r":11},{"id":9,"c":18,"r":14},{"id":10,"c":20,"r":14},{"id":11,"c":8,"r":15},{"id":12,"c":10,"r":15}],"panel":["关卡目标","为目标点1分配24点水量","为目标点2分配12点水量","为目标点3分配28点水量"]}];
+
+const NS = 'http://www.w3.org/2000/svg';
+const stage = document.getElementById('stage');
+const mask  = document.getElementById('mask');
+const dlg   = document.getElementById('dlg');
+const selBox= document.getElementById('sel');
+
+const C = {
+  grid:'#8C8C8C', pipe:'#C8B06F', pool:'#86CEE2', goal:'#708F3E', trap:'#D56B6B',
+  gateOff:'#E9AF90', gateOn:'#A9D9EE', gateStroke:'#C08A66', gateInk:'#4A3524',
+  panel:'#DFD79D', btnStart:'#B0D87F', btnReset:'#DBB773', back:'#541D1B',
+  water:'#3FB6EC', ink:'#1E3A47', inkLight:'#FFFFFF'
+};
+
+let cur = -1, open = [], phase = 'idle', res = null, L = null;
+let gWater = null, gGate = null, gText = null, bStart = null, bReset = null;
+
+function E(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function dOf(pts) { return pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' '); }
+function polyLen(pts) { let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]); return s; }
+
+/* ---------------- 选关 ---------------- */
+function renderSelect() {
+  mask.classList.add('hide');
+  selBox.classList.remove('hide');
+  selBox.innerHTML = '';
+  LEVELS.forEach((lv, i) => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.innerHTML = '<b>' + lv.title + '</b><span>水闸 ' + lv.gates.length + ' 个<br>目标点 ' +
+      lv.nodes.filter(n => n.kind === 'goal').length + ' 个</span>';
+    d.onclick = () => { selBox.classList.add('hide'); renderLevel(i); };
+    selBox.appendChild(d);
+  });
+}
+
+/* ---------------- 渲染关卡 ---------------- */
+function renderLevel(idx) {
+  cur = idx; L = LEVELS[idx]; phase = 'edit'; res = null;
+  open = L.gates.map(() => false);
+  stage.innerHTML = '';
+
+  const gGrid = E('g', {}, stage);
+  const gPipe = E('g', {}, stage);
+  gWater = E('g', {}, stage);
+  const gNode = E('g', {}, stage);
+  gGate = E('g', {}, stage);
+  /* 文字层在最上方，但整体不接收指针事件 → 绝不影响水闸点击等交互 */
+  gText = E('g', {'pointer-events':'none'}, stage);
+  const gUI = E('g', {}, stage);
+
+  for (let c = 0; c <= 32; c++) E('line', {x1:c*60, y1:0, x2:c*60, y2:1080, stroke:C.grid, 'stroke-width':2}, gGrid);
+  for (let r = 0; r <= 18; r++) E('line', {x1:0, y1:r*60, x2:1920, y2:r*60, stroke:C.grid, 'stroke-width':2}, gGrid);
+
+  L.edges.forEach(e => E('path', {d:dOf(e.pts), fill:'none', stroke:C.pipe, 'stroke-width':60,
+    'stroke-linejoin':'miter', 'stroke-linecap':'butt'}, gPipe));
+
+  L.nodes.forEach(n => drawNode(n, gNode, gText));
+
+  L.gates.forEach((g, i) => {
+    const grp = E('g', {class:'gate', 'data-i':i}, gGate);
+    E('rect', {x:g.c*60, y:g.r*60, width:60, height:60, fill:C.gateOff,
+      stroke:C.gateStroke, 'stroke-width':2}, grp);
+    grp.addEventListener('click', () => {
+      if (phase !== 'edit') return;
+      open[i] = !open[i]; paintGates();
+    });
+    /* 水闸文字：画在 gText（在水闸组件之上），不接收指针事件；
+       用 textLength 锁死宽度，保证绝不超出 60×60 的水闸格 */
+    E('text', {x:g.c*60+30, y:g.r*60+38, 'text-anchor':'middle', 'font-size':22,
+      'font-weight':'bold', fill:C.gateInk, textLength:38,
+      'lengthAdjust':'spacingAndGlyphs'}, gText).textContent = '水闸';
+  });
+  paintGates();
+
+  /* 返回键 */
+  const gBack = E('g', {class:'btn'}, gUI);
+  E('rect', {x:20, y:44, width:82, height:82, rx:8, fill:C.back}, gBack);
+  E('path', {d:'M 62 66 L 62 104 L 38 85 Z', fill:'#F3F3F3'}, gBack);
+  gBack.addEventListener('click', renderSelect);
+
+  /* 面板 */
+  E('rect', {x:60, y:180, width:360, height:180, rx:6, fill:C.panel}, gUI);
+  L.panel.forEach((t, i) => {
+    const y = 270 + (i - (L.panel.length - 1) / 2) * 34 + 7;
+    E('text', {x:240, y:y, 'text-anchor':'middle', 'font-size':20,
+      fill:'#4A3B14', 'font-weight': i === 0 ? 'bold' : 'normal'}, gUI).textContent = t;
+  });
+
+  /* 开始 / 重置 */
+  const bS = E('g', {class:'btn'}, gUI);
+  bStart = bS;
+  E('rect', {x:1680, y:300, width:120, height:120, rx:8, fill:C.btnStart}, bS);
+  E('text', {x:1740, y:372, 'text-anchor':'middle', 'font-size':26, fill:'#2C4A16'}, bS).textContent = '开始';
+  bS.addEventListener('click', startFlow);
+
+  const bR = E('g', {class:'btn'}, gUI);
+  bReset = bR;
+  E('rect', {x:1680, y:480, width:120, height:120, rx:8, fill:C.btnReset}, bR);
+  E('text', {x:1740, y:552, 'text-anchor':'middle', 'font-size':26, fill:'#5A4415'}, bR).textContent = '重置';
+  bR.addEventListener('click', resetLevel);
+
+  fit();
+}
+
+function drawNode(n, gN, gT) {
+  const b = n.box;
+  const x = b[0]*60, y = b[1]*60, w = (b[2]-b[0]+1)*60, h = (b[3]-b[1]+1)*60;
+  const fill = (n.kind === 'src' || n.kind === 'pool') ? C.pool :
+               (n.kind === 'goal' ? C.goal : C.trap);
+  E('rect', {x:x, y:y, width:w, height:h, rx:6, fill:fill,
+    stroke:'rgba(0,0,0,.13)', 'stroke-width':2}, gN);
+  const cx = x + w/2, cy = y + h/2;
+  const isGoal = n.kind === 'goal';
+  const col = isGoal ? C.inkLight : C.ink;
+
+  if (n.kind === 'src') {
+    E('text', {x:cx, y:cy-8, 'text-anchor':'middle', 'font-size':24, fill:col}, gT).textContent = n.label;
+    E('text', {x:cx, y:cy+22, 'text-anchor':'middle', 'font-size':22, fill:col}, gT).textContent = '水量：' + n.water;
+  } else if (isGoal) {
+    if (w <= 120) {
+      E('text', {x:cx, y:cy-26, 'text-anchor':'middle', 'font-size':20, fill:col}, gT).textContent = n.label;
+      E('text', {x:cx, y:cy+2,  'text-anchor':'middle', 'font-size':20, fill:col}, gT).textContent = '所需水量：';
+      E('text', {x:cx, y:cy+30, 'text-anchor':'middle', 'font-size':20, fill:col, 'data-goal':n.id}, gT)
+        .textContent = '0/' + n.need;
+    } else {
+      E('text', {x:cx, y:cy-8, 'text-anchor':'middle', 'font-size':20, fill:col}, gT).textContent = n.label;
+      E('text', {x:cx, y:cy+24, 'text-anchor':'middle', 'font-size':20, fill:col, 'data-goal':n.id}, gT)
+        .textContent = '所需水量：0/' + n.need;
+    }
+  } else if (n.kind === 'trap') {
+    /* 陷阱文字：「陷阱 / 会吸收流入水量的一半」两行。
+       字号按外框宽度自适应，并用 textLength 把宽度锁死 → 绝不超出陷阱外框 */
+    const t2 = '会吸收流入水量的一半';
+    const f2 = Math.min(17, (w - 20) / t2.length);
+    E('text', {x:cx, y:cy-11, 'text-anchor':'middle', 'font-size':25,
+      'font-weight':'bold', fill:col}, gT).textContent = '陷阱';
+    E('text', {x:cx, y:cy+21, 'text-anchor':'middle', 'font-size':f2, fill:col,
+      textLength:Math.min(w - 20, f2 * t2.length),
+      'lengthAdjust':'spacingAndGlyphs'}, gT).textContent = t2;
+  } else {
+    E('text', {x:cx, y:cy+8, 'text-anchor':'middle', 'font-size':24, fill:col}, gT).textContent = n.label;
+  }
+}
+
+function paintGates() {
+  gGate.querySelectorAll('g.gate').forEach(grp => {
+    const i = +grp.dataset.i;
+    grp.querySelector('rect').setAttribute('fill', open[i] ? C.gateOn : C.gateOff);
+  });
+}
+
+/* ---------------- 模拟 ---------------- */
+function simulate(lv, oset) {
+  const indeg = {}; lv.nodes.forEach(n => indeg[n.id] = 0);
+  lv.edges.forEach(e => indeg[e.to]++);
+  const deg = Object.assign({}, indeg);
+  const q = lv.nodes.filter(n => indeg[n.id] === 0).map(n => n.id);
+  const order = [];
+  while (q.length) {
+    const k = q.shift(); order.push(k);
+    lv.edges.forEach(e => { if (e.frm === k) { deg[e.to]--; if (deg[e.to] === 0) q.push(e.to); } });
+  }
+  if (order.length !== lv.nodes.length) return {val:{}, flow:{}, err:'cycle'};
+  const acc = {}; lv.nodes.forEach(n => acc[n.id] = 0);
+  const val = {}, flow = {};
+  order.forEach(id => {
+    const n = lv.nodes.find(x => x.id === id);
+    let c = n.kind === 'src' ? n.water : acc[id];
+    if (n.kind === 'trap') c /= 2;
+    val[id] = c;
+    if (n.kind === 'goal') return;
+    const outs = [];
+    lv.edges.forEach((e, j) => { if (e.frm === id && oset[e.gate]) outs.push(j); });
+    if (!outs.length) return;
+    const each = c / outs.length;
+    outs.forEach(j => { flow[j] = each; acc[lv.edges[j].to] += each; });
+  });
+  return {val, flow};
+}
+
+/* ---------------- 放水 ---------------- */
+function startFlow() {
+  if (phase !== 'edit') return;
+  phase = 'flow';
+  if (bStart) bStart.style.opacity = .45;
+  if (bReset) bReset.style.opacity = .45;
+  const r = simulate(L, open);
+  res = r;
+  const layer = {}; L.nodes.forEach(n => layer[n.id] = -1);
+  L.nodes.filter(n => n.kind === 'src').forEach(n => layer[n.id] = 0);
+  for (let it = 0; it < L.nodes.length + 2; it++)
+    L.edges.forEach(e => { if (layer[e.frm] >= 0 && layer[e.to] < layer[e.frm] + 1) layer[e.to] = layer[e.frm] + 1; });
+
+  const anim = [];
+  L.edges.forEach((e, j) => {
+    if (!(r.flow[j] > 0)) return;
+    const p = E('path', {d:dOf(e.pts), fill:'none', stroke:C.water, 'stroke-width':38,
+      'stroke-linecap':'round', 'stroke-linejoin':'round', opacity:.95}, gWater);
+    const len = polyLen(e.pts);
+    p.setAttribute('stroke-dasharray', len);
+    p.setAttribute('stroke-dashoffset', len);
+    anim.push({p, delay: Math.max(0, layer[e.frm]) * 420});
+  });
+  requestAnimationFrame(() => {
+    anim.forEach(o => {
+      o.p.style.transition = 'stroke-dashoffset 620ms linear ' + o.delay + 'ms';
+      o.p.setAttribute('stroke-dashoffset', 0);
+    });
+  });
+  const total = (anim.length ? Math.max(...anim.map(o => o.delay)) : 0) + 620 + 260;
+  setTimeout(finishFlow, total);
+}
+
+function finishFlow() {
+  phase = 'done';
+  const goals = L.nodes.filter(n => n.kind === 'goal')
+    .sort((a, b) => a.label.localeCompare(b.label, 'zh'));
+  goals.forEach(g => {
+    const t = gText.querySelector('[data-goal="' + g.id + '"]');
+    if (t) {
+      const shown = res.val[g.id] || 0;
+      const num = (Math.abs(shown - Math.round(shown)) < 1e-9) ? Math.round(shown) : shown.toFixed(1);
+      const pre = t.textContent.indexOf('：') >= 0 ? '所需水量：' : '';
+      t.textContent = pre + num + '/' + g.need;
+    }
+  });
+  const allOk = goals.every(g => Math.abs((res.val[g.id] || 0) - g.need) < 1e-6);
+  showResult(allOk, goals);
+}
+
+function resetLevel() {
+  if (phase === 'flow') return;
+  renderLevel(cur);
+}
+
+/* ---------------- 结算 ---------------- */
+function showResult(ok, goals) {
+  const rows = goals.slice().sort((a, b) => a.label.localeCompare(b.label, 'zh')).map(g => {
+    const v = res.val[g.id] || 0;
+    const num = (Math.abs(v - Math.round(v)) < 1e-9) ? Math.round(v) : v.toFixed(1);
+    const hit = Math.abs(v - g.need) < 1e-6;
+    return '<div class="row"><span>' + g.label + ' 需要 ' + g.need +
+      '</span><b class="' + (hit ? 'ok' : 'no') + '">实际 ' + num + ' ' + (hit ? '✔' : '✘') + '</b></div>';
+  }).join('');
+  const stagn = L.nodes.filter(n => n.kind !== 'goal' && n.kind !== 'src')
+    .reduce((s, n) => s, 0);
+  dlg.innerHTML =
+    '<h2>' + (ok ? '通关成功' : '通关失败') + '</h2>' + rows +
+    '<div class="hint">' + (ok ? '全部目标点水量正确。'
+      : '目标点水量必须「恰好」等于需求；蓄水池里没流出去的水不退还，请调整水闸后重试。') + '</div>' +
+    '<div class="acts"><button class="pri" id="btnAgain">重玩本关</button>' +
+    '<button id="btnSel">返回选关</button></div>';
+  mask.classList.remove('hide');
+  dlg.querySelector('#btnAgain').onclick = () => { mask.classList.add('hide'); renderLevel(cur); };
+  dlg.querySelector('#btnSel').onclick = renderSelect;
+}
+
+/* ---------------- 自适应 ---------------- */
+function fit() {
+  const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080) * 0.96;
+  stage.setAttribute('width', 1920 * s);
+  stage.setAttribute('height', 1080 * s);
+  selBox.style.fontSize = Math.max(12, 15 * s) + 'px';
+}
+window.addEventListener('resize', fit);
+fit();
+renderSelect();
+</script>
+</body>
+</html>
